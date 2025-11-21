@@ -1,0 +1,52 @@
+<?php
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+
+#[ORM\Entity]
+#[Vich\Uploadable]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    private ?string $email = null;
+
+    #[ORM\Column(type: 'json')]
+    private array $roles = [];
+
+    #[ORM\Column(type: 'string')]
+    private ?string $password = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $username = null;
+
+    #[Vich\UploadableField(mapping: 'user_avatars', fileNameProperty: 'avatarName')]
+    private ?File $avatarFile = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $avatarName = null;
+
+    public function getId(): ?int { return $this->id; }
+    public function getEmail(): ?string { return $this->email; }
+    public function setEmail(string $email): self { $this->email = $email; return $this; }
+    public function getUsername(): ?string { return $this->username; }
+    public function setUsername(string $username): self { $this->username = $username; return $this; }
+    public function getUserIdentifier(): string { return $this->email; }
+    public function getRoles(): array { return array_unique(array_merge($this->roles, ['ROLE_USER'])); }
+    public function setRoles(array $roles): self { $this->roles = $roles; return $this; }
+    public function getPassword(): string { return $this->password; }
+    public function setPassword(string $password): self { $this->password = $password; return $this; }
+    public function eraseCredentials(): void {}
+    public function getAvatarFile(): ?File { return $this->avatarFile; }
+    public function setAvatarFile(?File $avatarFile = null): void { $this->avatarFile = $avatarFile; if ($avatarFile) { $this->updatedAt = new \DateTimeImmutable(); } }
+    public function getAvatarName(): ?string { return $this->avatarName; }
+    public function setAvatarName(?string $avatarName): void { $this->avatarName = $avatarName; }
+}
