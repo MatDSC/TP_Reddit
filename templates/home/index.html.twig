@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Homepage - RedditClone{% endblock %}
+
+{% block body %}
+    <h1>Recent Posts</h1>
+
+    <form method="get" action="{{ path('post_search') }}" class="mb-4">
+        <input type="text" name="q" class="form-control" placeholder="Search posts by topic" value="{{ app.request.get('q') }}">
+    </form>
+
+    {% if posts|length == 0 %}
+        <p>No posts found.</p>
+    {% else %}
+        <div class="list-group">
+            {% for post in posts %}
+                <a href="{{ path('post_show', {'id': post.id}) }}" class="list-group-item list-group-item-action">
+                    <h5>{{ post.title }}</h5>
+                    <small>by {{ post.author.username }} in <a href="{{ path('subreddit_show', {'id': post.subreddit.id}) }}">r/{{ post.subreddit.name }}</a> – {{ post.createdAt|date('Y-m-d H:i') }}</small>
+                    <p>{{ post.content|striptags|length > 200 ? post.content|striptags|slice(0, 200) ~ '...' : post.content|striptags }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if is_granted('ROLE_USER') %}
+        <div class="mt-3">
+            <a href="{{ path('post_new') }}" class="btn btn-primary">Create New Post</a>
+        </div>
+    {% endif %}
+{% endblock %}
