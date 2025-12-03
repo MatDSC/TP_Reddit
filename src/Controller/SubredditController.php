@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Subreddit;
-use App\Form\SubredditType;
+use App\Form\Type\SubredditType;
 use App\Repository\SubredditRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

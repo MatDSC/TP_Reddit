@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}r/{{ subreddit.name }} - RedditClone{% endblock %}
+{% block title %}r/{{ subreddit.name }} - Reddit{% endblock %}
 
 {% block body %}
     <h1>r/{{ subreddit.name }}</h1>
     <p>{{ subreddit.description }}</p>
-    <p><strong>Rules:</strong> {{ subreddit.rules }}</p>
+    <p><strong>Roles :</strong> {{ subreddit.rules }}</p>
 
     <h3>Posts</h3>
     {% if subreddit.posts|length == 0 %}
-        <p>No posts in this subreddit yet.</p>
+        <p>Aucun Poste.</p>
     {% else %}
         <ul class="list-group">
             {% for post in subreddit.posts %}

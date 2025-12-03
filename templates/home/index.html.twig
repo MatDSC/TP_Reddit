@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Homepage - RedditClone{% endblock %}
+{% block title %}Page d'acceuil - Reddit{% endblock %}
 
 {% block body %}
-    <h1>Recent Posts</h1>
+    <h1>Publication Récente</h1>
 
     <form method="get" action="{{ path('post_search') }}" class="mb-4">
-        <input type="text" name="q" class="form-control" placeholder="Search posts by topic" value="{{ app.request.get('q') }}">
+        <input type="text" name="q" class="form-control" placeholder="Rechercher sur Reddit" value="{{ app.request.get('q') }}">
     </form>
 
     {% if posts|length == 0 %}
-        <p>No posts found.</p>
+        <p>Aucune publication trouvé.</p>
     {% else %}
         <div class="list-group">
             {% for post in posts %}

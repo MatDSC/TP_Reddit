@@ -1,8 +1,11 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Post;
-use App\Form\PostType;
+use App\Form\Type\CommentType;
+use App\Form\Type\PostType;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,9 +40,27 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
-    public function show(Post $post): Response
+    public function show(
+        Post $post,
+        CommentRepository $commentRepository
+    ): Response
     {
-        return $this->render('post/show.html.twig', ['post' => $post]);
+        // Get only top-level comments (no parent)
+        $comments = $commentRepository->findTopLevelCommentsByPost($post);
+
+        // Count total comments
+        $commentCount = $commentRepository->countByPost($post);
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment, [
+            'action' => $this->generateUrl('new_comment', ['postId' => $post->getId()]),
+            'method' => 'POST',
+        ]);
+        return $this->render('post/show.html.twig', [
+            'post' => $post,
+            'comments' => $comments,
+            'commentCount' => $commentCount,
+            'commentForm' => $commentForm->createView(),
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'post_edit', methods: ['GET', 'POST'])]

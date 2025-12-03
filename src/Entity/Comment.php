@@ -124,4 +124,8 @@ class Comment
         $this->createdAt = $createdAt;
         return $this;
     }
+
+    public function setFileName(string $newFilename)
+    {
+    }
 }
