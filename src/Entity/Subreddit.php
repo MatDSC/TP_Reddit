@@ -1,11 +1,12 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\SubredditRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: SubredditRepository::class)]
 class Subreddit
 {
     #[ORM\Id]

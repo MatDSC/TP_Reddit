@@ -1,9 +1,10 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\VoteRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: VoteRepository::class)]
 #[ORM\Table(name: 'vote', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'unique_user_post_vote', columns: ['user_id', 'post_id']),
     new ORM\UniqueConstraint(name: 'unique_user_comment_vote', columns: ['user_id', 'comment_id'])

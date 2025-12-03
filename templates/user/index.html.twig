@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Manage Users - RedditClone{% endblock %}
+
+{% block body %}
+    <h1>User Management</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Confirmed</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles|join(', ') }}</td>
+                <td>{{ user.isConfirmed ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-sm btn-secondary">Edit</a>
+                    <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" style="display:inline" onsubmit="return confirm('Delete this user?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
