@@ -16,15 +16,15 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('content', TextareaType::class, [
-                'label' => 'Your Comment',
+                'label' => 'Votre commentaire',
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 4,
-                    'placeholder' => 'Write your comment here...'
+                    'placeholder' => 'Ecrivez votre commentaire ici...',
                 ],
             ])
             ->add('file', FileType::class, [
-                'label' => 'Attach File (optional)',
+                'label' => 'Ajouter un fichier (optional)',
                 'mapped' => false,
                 'required' => false,
                 'attr' => ['class' => 'form-control'],

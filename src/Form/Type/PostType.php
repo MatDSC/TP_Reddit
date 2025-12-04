@@ -9,8 +9,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PostType extends AbstractType
 {
@@ -21,27 +19,16 @@ class PostType extends AbstractType
                 'label' => 'Title',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Enter post title...'
+                    'placeholder' => 'Entrez le titre de votre publication',
                 ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Title is required']),
-                    new Length([
-                        'min' => 5,
-                        'max' => 255,
-                        'minMessage' => 'Title must be at least {{ limit }} characters',
-                        'maxMessage' => 'Title cannot exceed {{ limit }} characters',
-                    ]),
-                ],
+
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Content',
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 10,
-                    'placeholder' => 'Write your post content...'
-                ],
-                'constraints' => [
-                    new NotBlank(['message' => 'Content is required']),
+                    'placeholder' => 'Ecrivez le contenu de votre publication'
                 ],
             ])
             ->add('subreddit', EntityType::class, [
@@ -49,11 +36,10 @@ class PostType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Subreddit',
                 'attr' => ['class' => 'form-control'],
-                'placeholder' => 'Choose a subreddit',
-                'constraints' => [
-                    new NotBlank(['message' => 'Please select a subreddit']),
-                ],
+                'placeholder' => 'Choisissez un subreddit'
+
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

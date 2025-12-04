@@ -1,16 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ post.id ? 'Nouveau Poste' }} - Reddit{% endblock %}
+{% block title %}{{ post.id ? 'Modifier la publication' : 'Créer une nouvelle publication' }} - RedditClone{% endblock %}
 
 {% block body %}
-    <h1>{{ post.id ? 'Create New Post' }}</h1>
+    <div class="container mt-5" style="max-width: 500px;">
+        <h1>{{ post.id ? 'Modifier la publication' : 'Nouvelle publication' }}</h1>
 
-    {{ form_start(form) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.subreddit) }}
-    {{ form_row(form.content) }}
-    <button class="btn btn-primary">{{ post.id ? 'Publish' }}</button>
-    {{ form_end(form) }}
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.title, 'Titre') }}
+            {{ form_widget(form.title, {'attr': {'class': 'form-control', 'placeholder': 'Entrez le titre de votre publication...'}}) }}
+            {{ form_errors(form.title) }}
+        </div>
 
-    <a href="{{ path('post_index') }}" class="btn btn-link mt-2">Back to posts</a>
+        <div class="mb-.">
+            {{ form_label(form.subreddit, 'Subreddit') }}
+            {{ form_widget(form.subreddit, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.subreddit) }}
+        </div>
+
+        <div class="mb-3" >
+            {{ form_label(form.content, 'Contenu') }}
+            {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 10, 'placeholder': 'Écrivez le contenu de votre publication...'}}) }}
+            {{ form_errors(form.content) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            {{ post.id ? 'Mettre à jour' : 'Publier' }}
+        </button>
+        <a href="{{ path('post_index') }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

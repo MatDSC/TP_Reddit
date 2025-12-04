@@ -6,7 +6,9 @@
     <h1>Publication Récente</h1>
 
     <form method="get" action="{{ path('post_search') }}" class="mb-4">
-        <input type="text" name="q" class="form-control" placeholder="Rechercher sur Reddit" value="{{ app.request.get('q') }}">
+        <label>
+            <input type="text" name="q" class="form-control" placeholder="Rechercher sur Reddit" value="{{ app.request.get('q') }}">
+        </label>
     </form>
 
     {% if posts|length == 0 %}
@@ -25,7 +27,7 @@
 
     {% if is_granted('ROLE_USER') %}
         <div class="mt-3">
-            <a href="{{ path('post_new') }}" class="btn btn-primary">Create New Post</a>
+            <a href="{{ path('post_new') }}" class="btn btn-primary">Crée une nouvelle publication</a>
         </div>
     {% endif %}
 {% endblock %}

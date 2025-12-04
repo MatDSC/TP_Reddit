@@ -21,6 +21,13 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$user->getEmail()) {
+                $this->addFlash('error', 'Email est requis');
+                return $this->render('registration/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                ]);
+            }
+
             $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
             $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);

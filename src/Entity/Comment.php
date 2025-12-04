@@ -34,6 +34,9 @@ class Comment
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $fileName = null;
+
     public function __construct()
     {
         $this->replies = new ArrayCollection();
@@ -125,7 +128,14 @@ class Comment
         return $this;
     }
 
-    public function setFileName(string $newFilename)
+    public function getFileName(): ?string
     {
+        return $this->fileName;
+    }
+
+    public function setFileName(?string $fileName): static
+    {
+        $this->fileName = $fileName;
+        return $this;
     }
 }

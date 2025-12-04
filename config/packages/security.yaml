@@ -1,17 +1,14 @@
 security:
-    # Password hashers (replaces "encoders")
     password_hashers:
         App\Entity\User:
             algorithm: auto
 
-    # User providers
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
 
-    # Firewalls
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -21,27 +18,28 @@ security:
             lazy: true
             provider: app_user_provider
 
-            # Form login
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: app_home
+                username_parameter: email
+                password_parameter: password
 
-            # Logout
+
             logout:
                 path: app_logout
                 target: app_home
 
-            # Remember me
+
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800  # 1 week in seconds
+                lifetime: 604800
                 path: /
                 always_remember_me: true
 
-    # Access control
     access_control:
+        - { path: ^/user, roles: ROLE_ADMIN}
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }

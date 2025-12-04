@@ -35,16 +35,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', nullable: true)]
     private ?string $avatarName = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $isConfirmed = false;
+
     public function getId(): ?int { return $this->id; }
     public function getEmail(): ?string { return $this->email; }
     public function setEmail(string $email): self { $this->email = $email; return $this; }
     public function getUsername(): ?string { return $this->username; }
     public function setUsername(string $username): self { $this->username = $username; return $this; }
-    public function getUserIdentifier(): string { return $this->email; }
+    public function getUserIdentifier(): string { return (string) $this->email; }
     public function getRoles(): array { return array_unique(array_merge($this->roles, ['ROLE_USER'])); }
     public function setRoles(array $roles): self { $this->roles = $roles; return $this; }
     public function getPassword(): string { return $this->password; }
     public function setPassword(string $password): self { $this->password = $password; return $this; }
+    public function isConfirmed(): bool { return $this->isConfirmed; }
+    public function getIsConfirmed(): bool { return $this->isConfirmed; }
+    public function setIsConfirmed(bool $isConfirmed): static { $this->isConfirmed = $isConfirmed; return $this; }
     public function eraseCredentials(): void {}
     public function getAvatarFile(): ?File { return $this->avatarFile; }
     public function setAvatarFile(?File $avatarFile = null): void { $this->avatarFile = $avatarFile; if ($avatarFile) { $this->updatedAt = new \DateTimeImmutable(); } }
