@@ -40,25 +40,21 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}', name: 'post_show', methods: ['GET'])]
-    public function show(
-        Post $post,
-        CommentRepository $commentRepository
-    ): Response
+    public function show(Post $post): Response
     {
-        // Get only top-level comments (no parent)
-        $comments = $commentRepository->findTopLevelCommentsByPost($post);
+        $commentForm = null;
 
         // Count total comments
-        $commentCount = $commentRepository->countByPost($post);
-        $comment = new Comment();
-        $commentForm = $this->createForm(CommentType::class, $comment, [
-            'action' => $this->generateUrl('new_comment', ['postId' => $post->getId()]),
-            'method' => 'POST',
-        ]);
+        if ($this->getUser()) {
+            $comment = new Comment();
+            $commentForm = $this->createForm(CommentType::class, $comment, [
+                'action' => $this->generateUrl('comment_new', ['postId' => $post->getId()]),
+                'method' => 'POST',
+                ]);
+        }
+
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'comments' => $comments,
-            'commentCount' => $commentCount,
             'commentForm' => $commentForm->createView(),
         ]);
     }

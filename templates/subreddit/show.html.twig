@@ -22,6 +22,6 @@
     {% endif %}
 
     {% if is_granted('ROLE_USER') %}
-        <a href="{{ path('post_new') }}" class="btn btn-primary mt-3">Create Post in r/{{ subreddit.name }}</a>
+        <a href="{{ path('post_new') }}" class="btn btn-primary mt-3">Crée une publication dans r/{{ subreddit.name }}</a>
     {% endif %}
 {% endblock %}

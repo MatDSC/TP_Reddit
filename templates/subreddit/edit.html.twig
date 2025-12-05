@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier r/{{ subreddit.name }} - Reddit{% endblock %}
+
+{% block body %}
+    <div class="container mt-5" style="max-width: 800px;">
+        <h1 class="mb-4">Modifier r/{{ subreddit.name }}</h1>
+
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.name, 'Nom du subreddit') }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.description, 'Description') }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.rules, 'Règles') }}
+            {{ form_widget(form.rules, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+            {{ form_errors(form.rules) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        <a href="{{ path('subreddit_show', {'id': subreddit.id}) }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

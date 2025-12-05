@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un subreddit - Reddit{% endblock %}
+
+{% block body %}
+    <div class="container mt-5" style="max-width: 800px;">
+        <h1 class="mb-4">Créer un nouveau subreddit</h1>
+
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.name, 'Nom du subreddit') }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Ex: python, gaming, science'}}) }}
+            {{ form_errors(form.name) }}
+            <small class="form-text text-muted">Le nom sera affiché comme r/votrenom</small>
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.description, 'Description') }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Décrivez votre subreddit...'}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.rules, 'Règles') }}
+            {{ form_widget(form.rules, {'attr': {'class': 'form-control', 'rows': 5, 'placeholder': 'Listez les règles de votre subreddit...'}}) }}
+            {{ form_errors(form.rules) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Créer le subreddit</button>
+        <a href="{{ path('subreddit_index') }}" class="btn btn-secondary">Annuler</a>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

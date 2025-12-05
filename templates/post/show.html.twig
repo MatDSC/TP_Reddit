@@ -3,52 +3,110 @@
 {% block title %}{{ post.title }} - RedditClone{% endblock %}
 
 {% block body %}
-    <h1>{{ post.title }}</h1>
-    <p>by {{ post.author.username }} in <a href="{{ path('subreddit_show', {'id': post.subreddit.id}) }}">r/{{ post.subreddit.name }}</a></p>
-    <p>{{ post.content|raw }}</p>
+    <div class="container mt-4" style="max-width: 900px;">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="card-title" style="word-wrap: break-word; overflow-wrap: break-word;">
+                    {{ post.title }}
+                </h1>
+                <p class="text-muted small mb-3">
+                    Par <strong>{{ post.author.username }}</strong>
+                    dans <a href="{{ path('subreddit_show', {'id': post.subreddit.id}) }}">r/{{ post.subreddit.name }}</a>
+                    - {{ post.createdAt|date('d/m/Y H:i') }}
+                </p>
+                <hr>
+                <div class="card-text" style="word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">
+                    {{ post.content|nl2br }}
+                </div>
 
-    {% if app.user and (post.author == app.user or is_granted('ROLE_ADMIN')) %}
-        <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-secondary btn-sm">Edit</a>
-        <form method="post" action="{{ path('post_delete', {'id': post.id}) }}" style="display: inline" onsubmit="return confirm('Are you sure?');">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-            <button class="btn btn-danger btn-sm">Delete</button>
-        </form>
-    {% endif %}
-
-    <hr />
-
-    <h3>Comments</h3>
-    {% if post.comments|length == 0 %}
-        <p>No comments yet.</p>
-    {% else %}
-        {% for comment in post.comments %}
-            <div class="mb-3 border p-2 rounded">
-                <p><strong>{{ comment.author.username }}</strong> said:</p>
-                <p>{{ comment.content|raw }}</p>
-                {% if comment.fileName %}
-                    <p>Attachment: <a href="{{ asset('uploads/comments/' ~ comment.fileName) }}" target="_blank">View</a></p>
-                {% endif %}
-                <small>Posted {{ comment.createdAt|date('Y-m-d H:i') }}</small>
-
-                {% if app.user and (comment.author == app.user or is_granted('ROLE_ADMIN')) %}
-                    <form method="post" action="{{ path('comment_delete', {'id': comment.id}) }}" onsubmit="return confirm('Delete this comment?');" class="mt-2">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </form>
+                {% if app.user and (post.author == app.user or is_granted('ROLE_ADMIN')) %}
+                    <hr>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
+                        <form method="post" action="{{ path('post_delete', {'id': post.id}) }}" style="display:inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette publication ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                            <button class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </div>
                 {% endif %}
             </div>
-        {% endfor %}
-    {% endif %}
+        </div>
 
-    {% if app.user and app.user.isConfirmed %}
-        <hr/>
-        <h4>Add a Comment</h4>
-        {{ form_start(commentForm, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        {{ form_row(commentForm.content) }}
-        {{ form_row(commentForm.file) }}
-        <button type="submit" class="btn btn-primary">Submit</button>
-        {{ form_end(commentForm) }}
-    {% else %}
-        <p><em>Please confirm your registration to comment.</em></p>
-    {% endif %}
+        <h3 class="mb-3">Commentaires ({{ post.comments|length }})</h3>
+
+        {% if app.user %}
+            {% if app.user.isConfirmed is defined and app.user.isConfirmed %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Ajouter un commentaire</h5>
+                        {% if commentForm %}
+                            {{ form_start(commentForm, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                            <div class="mb-3">
+                                {{ form_widget(commentForm.content, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Écrivez votre commentaire...'}}) }}
+                                {{ form_errors(commentForm.content) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(commentForm.file, 'Joindre un fichier (optionnel)') }}
+                                {{ form_widget(commentForm.file, {'attr': {'class': 'form-control'}}) }}
+                                {{ form_errors(commentForm.file) }}
+                                <small class="form-text text-muted">Formats acceptés: JPG, PNG, GIF, WebP, PDF (max 5MB)</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Publier le commentaire</button>
+                            {{ form_end(commentForm) }}
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Vous devez confirmer votre compte pour poster des commentaires.
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                Vous devez être <a href="{{ path('app_login') }}" class="alert-link">connecté</a> pour commenter.
+            </div>
+        {% endif %}
+        {% if post.comments is empty %}
+            <div class="alert alert-secondary">
+                Aucun commentaire pour le moment. Soyez le premier à commenter !
+            </div>
+        {% else %}
+            {% for comment in post.comments %}
+                {% if comment.parentComment is null %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <strong>{{ comment.author.username }}</strong>
+                                    <small class="text-muted ms-2">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                                </div>
+                                {% if app.user and (comment.author == app.user or is_granted('ROLE_ADMIN')) %}
+                                    <form method="post" action="{{ path('comment_delete', {'id': comment.id}) }}" style="display:inline" onsubmit="return confirm('Supprimer ce commentaire ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            <div class="comment-content" style="word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap;">
+                                {{ comment.content|nl2br }}
+                            </div>
+                            {% if comment.fileName %}
+                                <div class="mt-2">
+                                    <i class="bi bi-paperclip"></i>
+                                    <a href="{{ asset('uploads/comments/' ~ comment.fileName) }}" target="_blank" class="text-decoration-none">
+                                        Voir la pièce jointe
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <div class="mt-4">
+            <a href="{{ path('post_index') }}" class="btn btn-secondary">Retour aux publications</a>
+        </div>
+    </div>
 {% endblock %}

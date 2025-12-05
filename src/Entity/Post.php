@@ -37,7 +37,7 @@ class Post
     #[ORM\Column(type: 'integer')]
     private int $downvotes = 0;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', cascade: ['remove'])]
     private Collection $comments;
 
     public function __construct()
@@ -46,7 +46,6 @@ class Post
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    // Getters and setters
     public function getId(): ?int
     {
         return $this->id;

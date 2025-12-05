@@ -8,15 +8,15 @@
 
         <div class="card">
             <div class="card-body">
-                <p><strong>ID:</strong> {{ user.id }}</p>
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><strong>Rôles:</strong>
+                <p><strong>ID :</strong> {{ user.id }}</p>
+                <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Rôles :</strong>
                     {% for role in user.roles %}
                         <span class="badge bg-primary">{{ role }}</span>
                     {% endfor %}
                 </p>
-                <p><strong>Compte confirmé:</strong>
+                <p><strong>Compte confirmé :</strong>
                     {% if user.isConfirmed %}
                         <span class="badge bg-success">Oui</span>
                     {% else %}

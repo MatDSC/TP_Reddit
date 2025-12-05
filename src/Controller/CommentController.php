@@ -2,9 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Entity\Post;
 use App\Form\Type\CommentType;
-use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,21 +24,28 @@ class CommentController extends AbstractController
         SluggerInterface $slugger
     ): Response
     {
-        $post = $postRepository->find($postId);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        $post = $postRepository->find($postId);
         if (!$post) {
-            throw $this->createNotFoundException('Post not found');
+            throw $this->createNotFoundException('Publication non trouvé');
+        }
+
+        $user = $this->getUser();
+
+        if (!$user->isConfirmed()) {
+            $this->addFlash('error', 'Vous devez confirmer votre email avant de commenter.');
+            return $this->redirectToRoute('post_show', ['id' => $postId]);
         }
 
         $comment = new Comment();
-        $comment->setAuthor($this->getUser());
+        $comment->setAuthor($user);
         $comment->setPost($post);
 
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Handle file upload
             $file = $form->get('file')->getData();
 
             if ($file) {
@@ -49,99 +54,43 @@ class CommentController extends AbstractController
                 $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
                 try {
-                    $file->move(
-                        $this->getParameter('kernel.project_dir') . '/public/uploads/comments',
-                        $newFilename
-                    );
+                    $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/comments';
+                    if (!file_exists($uploadsDir)) {
+                        mkdir($uploadsDir, 0777, true);
+                    }
+
+                    $file->move($uploadsDir, $newFilename);
                     $comment->setFileName($newFilename);
                 } catch (FileException $e) {
-                    $this->addFlash('error', 'Failed to upload file: ' . $e->getMessage());
+                    $this->addFlash('error', 'Erreur lors du téléchargement du fichier');
                 }
             }
 
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Comment added successfully!');
+            $this->addFlash('success', 'Commentaire ajouté avec succès !');
             return $this->redirectToRoute('post_show', ['id' => $postId]);
         }
 
-        // If form has errors, redirect back with error message
-        $this->addFlash('error', 'Failed to add comment. Please check your input.');
+        $this->addFlash('error', 'Erreur lors de l\'ajout du commentaire');
         return $this->redirectToRoute('post_show', ['id' => $postId]);
-    }
-
-    #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
-    public function edit(
-        Request $request,
-        Comment $comment,
-        EntityManagerInterface $entityManager,
-        SluggerInterface $slugger
-    ): Response
-    {
-        // Check permissions
-        if ($comment->getAuthor() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('You cannot edit this comment.');
-        }
-
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Handle file upload
-            $file = $form->get('file')->getData();
-
-            if ($file) {
-                // Delete old file if exists
-                if ($comment->getFileName()) {
-                    $oldFilePath = $this->getParameter('kernel.project_dir') . '/public/uploads/comments/' . $comment->getFileName();
-                    if (file_exists($oldFilePath)) {
-                        unlink($oldFilePath);
-                    }
-                }
-
-                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
-
-                try {
-                    $file->move(
-                        $this->getParameter('kernel.project_dir') . '/public/uploads/comments',
-                        $newFilename
-                    );
-                    $comment->setFileName($newFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Failed to upload file: ' . $e->getMessage());
-                }
-            }
-
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Comment updated successfully!');
-            return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
-        }
-
-        return $this->render('comment/edit.html.twig', [
-            'comment' => $comment,
-            'form' => $form->createView(),
-        ]);
     }
 
     #[Route('/{id}', name: 'comment_delete', methods: ['POST'])]
     public function delete(
         Request $request,
         Comment $comment,
-        CommentRepository $commentRepository,
         EntityManagerInterface $entityManager
     ): Response
     {
-        // Check permissions
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         if ($comment->getAuthor() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException('You cannot delete this comment.');
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer ce commentaire.');
         }
 
         if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->request->get('_token'))) {
-            // Delete file if exists
             if ($comment->getFileName()) {
                 $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/comments/' . $comment->getFileName();
                 if (file_exists($filePath)) {
@@ -150,29 +99,14 @@ class CommentController extends AbstractController
             }
 
             $postId = $comment->getPost()->getId();
-
-            // Use repository method if you want (or just entityManager->remove)
             $entityManager->remove($comment);
             $entityManager->flush();
 
-            $this->addFlash('success', 'Comment deleted successfully!');
+            $this->addFlash('success', 'Commentaire supprimé avec succès !');
             return $this->redirectToRoute('post_show', ['id' => $postId]);
         }
 
-        $this->addFlash('error', 'Invalid CSRF token.');
+        $this->addFlash('error', 'Token CSRF invalide');
         return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
-    }
-
-    #[Route('/{id}', name: 'comment_show', methods: ['GET'])]
-    public function show(Comment $comment, CommentRepository $commentRepository): Response
-    {
-        // You can use repository to fetch additional data if needed
-        // For example, get all replies to this comment
-        $replies = $commentRepository->findBy(['parentComment' => $comment]);
-
-        return $this->render('comment/show.html.twig', [
-            'comment' => $comment,
-            'replies' => $replies,
-        ]);
     }
 }
