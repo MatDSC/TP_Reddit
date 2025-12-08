@@ -1,0 +1,48 @@
+{# templates/emails/welcome.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #ff4500;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+    </style>
+    <title></title>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Bienvenue sur Reddit!</h1>
+    </div>
+    <div class="content">
+        <h2>Bonjour {{ username }} !</h2>
+        <p>Merci d'avoir rejoint notre magnifique communauté</p>
+        <p>Vous pouvez maintenant :</p>
+        <ul>
+            <li>Créer des publications</li>
+            <li>Commenter des publications</li>
+            <li>Voter sur les publications</li>
+        </ul>
+        <p>Amusez-vous ! </p>
+    </div>
+</div>
+</body>
+</html>
