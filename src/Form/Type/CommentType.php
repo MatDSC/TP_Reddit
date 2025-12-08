@@ -42,7 +42,7 @@ class CommentType extends AbstractType
                             'application/vnd.ms-excel',
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid file (images, PDF, Word, Excel)',
+                        'mimeTypesMessage' => 'Merci de télécharger un fichier dans le format autorisé (JPEG, PNG, GIF)',
                     ])
                 ],
             ]);

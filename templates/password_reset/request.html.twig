@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mot de passe oublié - Reddit{% endblock %}
+
+{% block body %}
+    <link rel="stylesheet" href="/public/css/password_reset_request.css">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-warning text-dark text-center py-4">
+                        <div class="mb-2">
+                            <i class="fas fa-key fa-3x"></i>
+                        </div>
+                        <h2 class="mb-0">Mot de passe oublié ?</h2>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Pas de panique !</strong><br>
+                            Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                        </div>
+
+                        {{ form_start(requestForm, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <div class="mb-4">
+                            {{ form_label(requestForm.email, null, {
+                                'label_attr': {'class': 'form-label fw-bold'}
+                            }) }}
+                            {{ form_widget(requestForm.email, {
+                                'attr': {
+                                    'class': 'form-control form-control-lg',
+                                    'placeholder': 'votre@email.com',
+                                    'autofocus': true
+                                }
+                            }) }}
+                            <div class="form-text">
+                                <i class="fas fa-envelope"></i>
+                                Nous vous enverrons un email avec les instructions
+                            </div>
+                            {{ form_errors(requestForm.email) }}
+                        </div>
+
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fas fa-paper-plane"></i>
+                                Envoyer le lien de réinitialisation
+                            </button>
+                        </div>
+                        {{ form_end(requestForm) }}
+
+                        <hr class="my-4">
+
+                        <div class="text-center">
+                            <p class="text-muted mb-2">Vous vous souvenez de votre mot de passe ?</p>
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Retour à la connexion
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-light text-center py-3">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt"></i>
+                            Vos données sont sécurisées
+                        </small>
+                    </div>
+                </div>
+
+                <div class="card mt-4 border-0 bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-question-circle"></i> Besoin d'aide ?
+                        </h6>
+                        <ul class="small mb-0">
+                            <li>Vérifiez votre dossier spam si vous ne recevez pas l'email</li>
+                            <li>Le lien de réinitialisation expire après 1 heure</li>
+                            <li>Vous pouvez demander un nouveau lien à tout moment</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

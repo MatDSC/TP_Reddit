@@ -20,19 +20,15 @@ class UserType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => 'Username',
                 'attr' => ['class' => 'form-control'],
-                'constraints' => [
-                    new NotBlank(['message' => 'Username is required']),
-                ],
+
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => ['class' => 'form-control'],
-                'constraints' => [
-                    new NotBlank(['message' => 'Email is required']),
-                ],
+
             ])
             ->add('avatarFile', FileType::class, [
-                'label' => 'Profile Picture (optional)',
+                'label' => 'Photo de profil (optional)',
                 'mapped' => false,
                 'required' => false,
                 'attr' => ['class' => 'form-control'],
@@ -44,7 +40,7 @@ class UserType extends AbstractType
                             'image/png',
                             'image/gif',
                         ],
-                        'mimeTypesMessage' => 'Please upload a valid image (JPEG, PNG, GIF)',
+                        'mimeTypesMessage' => 'Merci de télécharger un fichier dans le format autorisé (JPEG, PNG, GIF)',
                     ])
                 ],
             ])
