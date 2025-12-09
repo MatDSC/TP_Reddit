@@ -6,11 +6,11 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header" style="text-align: center">
-                        <h3>Connexion</h3>
+                <div class="card shadow-lg">
+                    <div class="card-header bg-body text-dark text-center py-4">
+                        <h2>Connexion</h2>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
@@ -22,25 +22,27 @@
                         {% endif %}
 
                         <form method="post">
-                            <div class="mb-3">
-                                <label for="inputEmail" class="form-label">Email</label>
-                                <input type="email" name="email" id="inputEmail" class="form-control" value="{{ last_username }}" required autofocus>
+                            <div class="mb-4">
+                                <label for="inputEmail" class="form-label fw-bold">Adresse email</label>
+                                <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Entrez votre email" value="{{ last_username }}" required autofocus>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="inputPassword" class="form-label">Mot de passe</label>
-                                <input type="password" name="password" id="inputPassword" class="form-control" required>
+                            <div class="mb-4">
+                                <label for="inputPassword" class="form-label fw-bold">Mot de passe</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Entrez votre mot de passe" required>
                             </div>
 
-                            <div class="mb-3 form-check">
+                            <div class="mb-4 form-check">
                                 <input type="checkbox" name="_remember_me" id="remember_me" class="form-check-input">
-                                <label for="remember_me" class="form-check-label">Se souvenir de moi</label>
+                                <label for="remember_me" class="form-check-label fw-bold">Se souvenir de moi</label>
                             </div>
 
 
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                            <button class="btn btn-primary w-100" type="submit">Se connecter</button>
+                            <div class="d-grid gap-2 mb-3">
+                                <button class="btn btn-primary btn-lg" type="submit">Se connecter</button>
+                            </div>
 
                             <div class="text-center">
                                 <a href="{{ path('app_forgot_password') }}" class="btn btn-link text-decoration-none">

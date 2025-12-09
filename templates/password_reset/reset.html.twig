@@ -6,32 +6,32 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white">
-                        <h3 class="mb-0">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-body text-dark text-center py-4">
+                        <h2 class="mb-2">
                             <i class="fas fa-lock"></i> Créer un nouveau mot de passe
-                        </h3>
+                        </h2>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i>
-                            Choisissez un mot de passe fort avec au moins 6 caractères.
+                            Choisissez un mot de passe fort avec au moins 8 caractères.
                         </div>
 
                         {{ form_start(resetForm) }}
                         <div class="mb-3">
-                            {{ form_label(resetForm.plainPassword.first, 'Nouveau mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(resetForm.plainPassword.first, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                            {{ form_label(resetForm.plainPassword.first, 'Nouveau mot de passe', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(resetForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre mot de passe'}}) }}
                         </div>
 
                         <div class="mb-4">
-                            {{ form_label(resetForm.plainPassword.second, 'Confirmer le mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(resetForm.plainPassword.second, {'attr': {'class': 'form-control form-control-lg'}}) }}
+                            {{ form_label(resetForm.plainPassword.second, 'Confirmer le mot de passe', {'label_attr': {'class': 'form-label fw-bold'}}) }}
+                            {{ form_widget(resetForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmez votre mot de passe'}}) }}
                             {{ form_errors(resetForm.plainPassword) }}
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg">
+                            <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="fas fa-check"></i> Réinitialiser le mot de passe
                             </button>
                         </div>

@@ -145,7 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isTokenExpired(): bool
     {
         if (!$this->tokenExpiresAt) {
-            return true;
+            return false;
         }
         return $this->tokenExpiresAt < new \DateTimeImmutable();
     }

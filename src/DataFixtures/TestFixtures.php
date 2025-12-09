@@ -9,11 +9,12 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-
 class TestFixtures extends Fixture
 {
-    public const USER_REFERENCE = 'user_test';
-    public const POST_REFERENCE = 'post_test';
+    public const USER_REFERENCE = 'test_unitaire';
+    public const USER2_REFERENCE = 'test_unitaire2';
+    public const POST_REFERENCE = 'test_post';
+    public const COMMENT_REFERENCE = 'test_comment';
 
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher
@@ -21,39 +22,52 @@ class TestFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Create test user
-        $user = new User();
-        $user->setEmail('test@example.com');
-        $user->setUsername('testuser');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'password123'));
-        $user->setIsConfirmed(true);
-        $manager->persist($user);
-        $this->addReference(self::USER_REFERENCE, $user);
 
-        // Create another user
+        $user1 = new User();
+        $user1->setEmail('test@example.com');
+        $user1->setUsername('test');
+        $user1->setPassword($this->passwordHasher->hashPassword($user1, 'motdepassetest'));
+        $user1->setIsConfirmed(true);
+        $manager->persist($user1);
+        $this->addReference(self::USER_REFERENCE, $user1);
+
         $user2 = new User();
-        $user2->setEmail('user2@example.com');
-        $user2->setUsername('user2');
-        $user2->setPassword($this->passwordHasher->hashPassword($user2, 'password123'));
+        $user2->setEmail('test2@example.com');
+        $user2->setUsername('test2');
+        $user2->setPassword($this->passwordHasher->hashPassword($user2, 'motdepassetest2'));
         $user2->setIsConfirmed(true);
         $manager->persist($user2);
+        $this->addReference(self::USER2_REFERENCE, $user2);
 
-        // Create test post
-        $post = new Post();
-        $post->setTitle('Test Post Title');
-        $post->setContent('This is a test post content.');
-        $post->setAuthor($user);
-        $post->setCreatedAt(new \DateTimeImmutable());
-        $manager->persist($post);
-        $this->addReference(self::POST_REFERENCE, $post);
+        $user3 = new User();
+        $user3->setEmail('noconfirmed@example.com');
+        $user3->setUsername('noconfirmed');
+        $user3->setPassword($this->passwordHasher->hashPassword($user3, 'motdepassenc'));
+        $user3->setIsConfirmed(false);
+        $user3->setActivationToken('token_001');
+        $user3->setTokenExpiresAt(new \DateTime('+24 hours'));
+        $manager->persist($user3);
 
-        // Create test comment
+        for ($i = 1; $i <= 3; $i++) {
+            $post = new Post();
+            $post->setTitle("Titre $i");
+            $post->setContent("Contenu n° $i.");
+            $post->setAuthor($user1);
+            $post->setCreatedAt(new \DateTimeImmutable());
+            $manager->persist($post);
+
+            if ($i === 1) {
+                $this->addReference(self::POST_REFERENCE, $post);
+            }
+        }
+
         $comment = new Comment();
-        $comment->setContent('This is a test comment.');
-        $comment->setPost($post);
+        $comment->setContent('Commentaire test.');
+        $comment->setPost($this->getReference(self::POST_REFERENCE));
         $comment->setAuthor($user2);
         $comment->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($comment);
+        $this->addReference(self::COMMENT_REFERENCE, $comment);
 
         $manager->flush();
     }
