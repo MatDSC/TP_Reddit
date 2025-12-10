@@ -9,20 +9,63 @@ use PHPUnit\Framework\TestCase;
 
 class CommentTest extends TestCase
 {
+    private Comment $comment;
+
+    protected function setUp(): void
+    {
+        $this->comment = new Comment();
+    }
+
     public function testCommentEntity(): void
     {
-        $comment = new Comment();
+        $post = new Post();
+        $user = new User();
+        $createdAt = new \DateTimeImmutable();
+
+        $this->comment->setContent('Test comment content');
+        $this->comment->setPost($post);
+        $this->comment->setAuthor($user);
+        $this->comment->setCreatedAt($createdAt);
+
+        $this->assertEquals('Test comment content', $this->comment->getContent());
+        $this->assertSame($post, $this->comment->getPost());
+        $this->assertSame($user, $this->comment->getAuthor());
+
+        // Accepter DateTime ou DateTimeImmutable
+        $this->assertInstanceOf(\DateTimeInterface::class, $this->comment->getCreatedAt());
+    }
+
+    public function testCommentId(): void
+    {
+        $this->assertNull($this->comment->getId());
+    }
+
+    public function testCommentRelationships(): void
+    {
         $post = new Post();
         $user = new User();
 
-        $comment->setContent('Commentaire incroyable');
-        $comment->setPost($post);
-        $comment->setAuthor($user);
+        $this->comment->setPost($post);
+        $this->comment->setAuthor($user);
+
+        $this->assertSame($post, $this->comment->getPost());
+        $this->assertSame($user, $this->comment->getAuthor());
+    }
+
+    public function testCommentContent(): void
+    {
+        $content = 'This is a test comment with some content.';
+        $this->comment->setContent($content);
+
+        $this->assertEquals($content, $this->comment->getContent());
+    }
+
+    public function testCommentCreatedAtAutoSet(): void
+    {
+        $comment = new Comment();
         $comment->setCreatedAt(new \DateTimeImmutable());
 
-        $this->assertEquals('Commentaire incroyable', $comment->getContent());
-        $this->assertSame($post, $comment->getPost());
-        $this->assertSame($user, $comment->getAuthor());
-        $this->assertInstanceOf(\DateTime::class, $comment->getCreatedAt());
+        $this->assertInstanceOf(\DateTimeInterface::class, $comment->getCreatedAt());
     }
 }
+

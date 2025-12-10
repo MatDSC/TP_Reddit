@@ -31,12 +31,6 @@ class Post
     #[ORM\Column(type: 'datetime_immutable')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: 'integer')]
-    private int $upvotes = 0;
-
-    #[ORM\Column(type: 'integer')]
-    private int $downvotes = 0;
-
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'post', cascade: ['remove'])]
     private Collection $comments;
 
@@ -103,28 +97,6 @@ class Post
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getUpvotes(): int
-    {
-        return $this->upvotes;
-    }
-
-    public function setUpvotes(int $upvotes): self
-    {
-        $this->upvotes = $upvotes;
-        return $this;
-    }
-
-    public function getDownvotes(): int
-    {
-        return $this->downvotes;
-    }
-
-    public function setDownvotes(int $downvotes): self
-    {
-        $this->downvotes = $downvotes;
         return $this;
     }
 

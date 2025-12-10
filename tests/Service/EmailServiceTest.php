@@ -29,7 +29,7 @@ class EmailServiceTest extends TestCase
                     && str_contains($email->getSubject(), 'Activez votre compte');
             }));
 
-        $this->emailService->sendActivationEmail(
+        $this->emailService->sendValidationEmail(
             'test@example.com',
             'testuser',
             'test_token_123'
