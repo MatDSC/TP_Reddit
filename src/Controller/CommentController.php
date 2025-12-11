@@ -2,66 +2,111 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
-use App\Form\CommentType;
-use App\Repository\CommentRepository;
+use App\Form\Type\CommentType;
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/comment')]
 class CommentController extends AbstractController
 {
-    #[Route('/new/{postId}/{parentId?}', name: 'comment_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, int $postId, ?int $parentId, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{postId}', name: 'comment_new', methods: ['POST'])]
+    public function new(
+        Request $request,
+        int $postId,
+        PostRepository $postRepository,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger
+    ): Response
     {
-        $comment = new Comment();
-        $comment->setAuthor($this->getUser());
-        $comment->setPost($entityManager->getRepository(\App\Entity\Post::class)->find($postId));
-        if ($parentId) {
-            $comment->setParentComment($entityManager->getRepository(Comment::class)->find($parentId));
-        }
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($comment);
-            $entityManager->flush();
+        $post = $postRepository->find($postId);
+        if (!$post) {
+            throw $this->createNotFoundException('Publication non trouvé');
+        }
+
+        $user = $this->getUser();
+
+        if (!$user->isConfirmed()) {
+            $this->addFlash('error', 'Vous devez confirmer votre email avant de commenter.');
             return $this->redirectToRoute('post_show', ['id' => $postId]);
         }
 
-        return $this->render('comment/new.html.twig', ['comment' => $comment, 'form' => $form]);
-    }
+        $comment = new Comment();
+        $comment->setAuthor($user);
+        $comment->setPost($post);
 
-    #[Route('/{id}/edit', name: 'comment_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
-    {
-        if ($comment->getAuthor() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+
+            if ($file) {
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+
+                try {
+                    $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads/comments';
+                    if (!file_exists($uploadsDir)) {
+                        mkdir($uploadsDir, 0777, true);
+                    }
+
+                    $file->move($uploadsDir, $newFilename);
+                    $comment->setFileName($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement du fichier');
+                }
+            }
+
+            $entityManager->persist($comment);
             $entityManager->flush();
-            return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
+
+            $this->addFlash('success', 'Commentaire ajouté avec succès !');
+            return $this->redirectToRoute('post_show', ['id' => $postId]);
         }
 
-        return $this->render('comment/edit.html.twig', ['comment' => $comment, 'form' => $form]);
+        $this->addFlash('error', 'Erreur lors de l\'ajout du commentaire');
+        return $this->redirectToRoute('post_show', ['id' => $postId]);
     }
 
     #[Route('/{id}', name: 'comment_delete', methods: ['POST'])]
-    public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request,
+        Comment $comment,
+        EntityManagerInterface $entityManager
+    ): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         if ($comment->getAuthor() !== $this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
-        if ($this->isCsrfTokenValid('delete'.$comment->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($comment);
-            $entityManager->flush();
+            throw $this->createAccessDeniedException('Vous ne pouvez pas supprimer ce commentaire.');
         }
 
+        if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->request->get('_token'))) {
+            if ($comment->getFileName()) {
+                $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/comments/' . $comment->getFileName();
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+
+            $postId = $comment->getPost()->getId();
+            $entityManager->remove($comment);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Commentaire supprimé avec succès !');
+            return $this->redirectToRoute('post_show', ['id' => $postId]);
+        }
+
+        $this->addFlash('error', 'Token CSRF invalide');
         return $this->redirectToRoute('post_show', ['id' => $comment->getPost()->getId()]);
     }
 }

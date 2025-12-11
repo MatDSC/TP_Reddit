@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs - Reddit{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Gestion des utilisateurs</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Rôles</th>
+                <th>Confirmé</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in user %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        {% for role in user.roles %}
+                            <span class="badge bg-primary">{{ role }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% set confirmed = false %}
+                        {% if user.isConfirmed is defined %}
+                            {% set confirmed = user.isConfirmed %}
+                        {% endif %}
+
+                        {% if confirmed %}
+                            <span class="badge bg-success">Oui</span>
+                        {% else %}
+                            <span class="badge bg-warning">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('user_show', {'id': user.id}) }}" class="btn btn-sm btn-info">Voir</a>
+                        <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-sm btn-secondary">Modifier</a>
+                        <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" style="display:inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                            <button class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucun utilisateur trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

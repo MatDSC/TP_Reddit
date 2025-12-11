@@ -1,0 +1,17 @@
+services:
+    database:
+        image: mariadb:11
+        container_name: reddit_mariadb
+        restart: always
+        environment:
+            MARIADB_ROOT_PASSWORD: root
+            MARIADB_DATABASE: reddit
+            MARIADB_USER: reddit
+            MARIADB_PASSWORD: reddit
+        ports:
+            - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+
+volumes:
+    db_data:

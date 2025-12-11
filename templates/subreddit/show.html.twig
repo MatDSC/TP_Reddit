@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}r/{{ subreddit.name }} - Reddit{% endblock %}
+
+{% block body %}
+    <h1>r/{{ subreddit.name }}</h1>
+    <p>{{ subreddit.description }}</p>
+    <p><strong>Roles :</strong> {{ subreddit.rules }}</p>
+
+    <h3>Posts</h3>
+    {% if subreddit.posts|length == 0 %}
+        <p>Aucune Publication</p>
+    {% else %}
+        <ul class="list-group">
+            {% for post in subreddit.posts %}
+                <li class="list-group-item">
+                    <a href="{{ path('post_show', {'id': post.id}) }}">{{ post.title }}</a>
+                    <small>by {{ post.author.username }} - {{ post.createdAt|date('Y-m-d') }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('post_new') }}" class="btn btn-primary mt-3">Crée une publication dans r/{{ subreddit.name }}</a>
+    {% endif %}
+{% endblock %}
