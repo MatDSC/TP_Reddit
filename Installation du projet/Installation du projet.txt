@@ -1,0 +1,31 @@
+================================================================================
+                    GUIDE D'INSTALLATION - REDDIT
+================================================================================
+
+ÉTAPE 1: PRÉREQUIS
+================== 
+
+Version
+---------------------
+Php : Version 8.4.5
+
+
+ÉTAPE 2: CONFIGURATION DE LA BASE DE DONNÉES
+=============================================
+
+Le projet à été fait sur une base de données MariaDB sur docker desktop
+
+Fichier SQL et docker-compose.yaml à la racine du dossier
+
+
+ETAPE 3 : CONNEXION AU SITE
+===========================
+
+Compte Admin :
+Email : admin@reddit.fr Mdp : Admin
+
+Compte User :
+Email : user@gmail.com Mdp : User
+
+
+
