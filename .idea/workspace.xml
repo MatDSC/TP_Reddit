@@ -5,15 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a5e6386-9760-45d1-99a8-8ab95d24e4f8" name="Changes" comment="Test unit successful. Final Version">
-      <change afterPath="$PROJECT_DIR$/migrations/Version20251121105707.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/Version20251204135357.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/migrations/Version20251205104218.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/9dc5a6a9-5537-4f8c-a25f-082030e35cb7.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/9dc5a6a9-5537-4f8c-a25f-082030e35cb7/storage_v2/_src_/schema/information_schema.FNRwLQ.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/9dc5a6a9-5537-4f8c-a25f-082030e35cb7/storage_v2/_src_/schema/reddit.XrZGyA.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/password_reset_request.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/uploads/comments/Capture-d-ecran-2025-04-07-151214-6936afd622734.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/PostController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PostController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/VoteController.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataFixtures/AppFixtures.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataFixtures/AppFixtures.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Comment.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Comment.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Vote.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/password_reset/request.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/password_reset/request.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/post/post.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/post/post.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -236,6 +243,8 @@
       <workItem from="1765439861006" duration="1133000" />
       <workItem from="1765445002656" duration="343000" />
       <workItem from="1765445562918" duration="191000" />
+      <workItem from="1765446639326" duration="139000" />
+      <workItem from="1765545010727" duration="1638000" />
     </task>
     <task id="LOCAL-00001" summary="Setup database in docker. Create all entity, controller">
       <option name="closed" value="true" />
@@ -333,7 +342,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765371568435</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Test unit successful. Final Version">
+      <option name="closed" value="true" />
+      <created>1765446749852</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1765446749852</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -364,6 +381,7 @@
     <MESSAGE value="End writing test unit. Final test in progress" />
     <MESSAGE value="Test unit in progress" />
     <MESSAGE value="End-Test and final version" />
-    <option name="LAST_COMMIT_MESSAGE" value="End-Test and final version" />
+    <MESSAGE value="Test unit successful. Final Version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test unit successful. Final Version" />
   </component>
 </project>

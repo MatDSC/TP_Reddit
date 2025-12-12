@@ -44,7 +44,6 @@ class PostController extends AbstractController
     {
         $commentForm = null;
 
-        // Count total comments
         if ($this->getUser()) {
             $comment = new Comment();
             $commentForm = $this->createForm(CommentType::class, $comment, [

@@ -23,16 +23,8 @@
 
                         {{ form_start(requestForm, {'label_attr': {'novalidate': 'novalidate'}}) }}
                         <div class="mb-4">
-                            {{ form_label(requestForm.email, null, {
-                                'label_attr': {'class': 'form-label fw-bold'}
-                            }) }}
-                            {{ form_widget(requestForm.email, {
-                                'attr': {
-                                    'class': 'form-control',
-                                    'placeholder': 'Entrez votre email',
-                                    'autofocus': true
-                                }
-                            }) }}
+                            {{ form_label(requestForm.email, null, {'label_attr': {'class': 'form-label fw-bold'} }) }}
+                            {{ form_widget(requestForm.email, {'attr': {'class': 'form-control', 'placeholder': 'Entrez votre email', 'autofocus': true} }) }}
                             <div class="form-text">
                                 <i class="fas fa-envelope"></i>
                                 Nous vous enverrons un email avec les instructions

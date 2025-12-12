@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="PS-243.26053.13">
-    <data-source name="reddit@localhost" uuid="60add30e-8ce6-4aa2-ba0b-0e3a91a03779">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
-      <schema-mapping />
-    </data-source>
-    <data-source name="reddit@localhost [2]" uuid="3720b998-0dc4-44b1-ba9e-b1dcfac2dfb3">
+    <data-source name="reddit@localhost" uuid="bf44fabc-674d-4316-b94b-76a00fee983c">
       <database-info product="MariaDB" version="11.8.5-MariaDB-ubu2404" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="3.3.3" dbms="MARIADB" exact-version="11.8.5" exact-driver-version="3.3">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>

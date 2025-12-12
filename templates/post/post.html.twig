@@ -10,7 +10,7 @@
 
         {% if app.user and (post.author == app.user or is_granted('ROLE_ADMIN')) %}
             <a href="{{ path('post_edit', {'id': post.id}) }}" class="btn btn-secondary btn-sm">Edit</a>
-            <form method="post" action="{{ path('post_delete', {'id': post.id}) }}" style="display:inline" onsubmit="return confirm('Are you sure?');">
+            <form method="post" action="{{ path('post_delete', {'id': post.id}) }}" style="display:inline" onsubmit="return confirm('Etes-vous sûre?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
                 <button class="btn btn-danger btn-sm">Delete</button>
             </form>

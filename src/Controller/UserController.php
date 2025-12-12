@@ -52,7 +52,6 @@ class UserController extends AbstractController
 
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
 
-            // Check if user has created subreddits
             $subreddits = $entityManager->getRepository(\App\Entity\Subreddit::class)
                 ->findBy(['createdBy' => $user]);
 
@@ -61,7 +60,6 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('user_index');
             }
 
-            // Check if user has posts
             $posts = $entityManager->getRepository(\App\Entity\Post::class)
                 ->findBy(['author' => $user]);
 
@@ -70,7 +68,6 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('user_index');
             }
 
-            // Check if user has comments
             $comments = $entityManager->getRepository(\App\Entity\Comment::class)
                 ->findBy(['author' => $user]);
 
@@ -79,7 +76,6 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('user_index');
             }
 
-            // If no related data, delete the user
             $entityManager->remove($user);
             $entityManager->flush();
 
